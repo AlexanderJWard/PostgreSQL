@@ -21,6 +21,15 @@ class Programmer(base):
     famous_for = Column(String)
 
 
+# create another table for favorite places
+class FavoritePlaces(base):
+    __tablename__ = "FavoritePlaces"
+    id = Column(Integer, primary_key=True)
+    country = Column(String)
+    country_pop = Column(Integer)
+    city = Column(String)
+    
+
 # instead of connecting to the database directly, we will ask for a session
 # create a new instance of sessionmaker, then point to our engine (the db)
 Session = sessionmaker(db)
@@ -30,6 +39,31 @@ session = Session()
 # creating the database using declarative_base subclass
 base.metadata.create_all(db)
 
+# creating records on our FavoritePlaces table
+
+leeds = FavoritePlaces(
+    country="England",
+    country_pop=10000000,
+    city="Leeds"
+)
+
+madrid = FavoritePlaces(
+    country="Spain",
+    country_pop=20000000,
+    city="Madrid"
+)
+
+tokyo = FavoritePlaces(
+    country="Japan",
+    country_pop=30000000,
+    city="Tokyo"
+)
+
+new_york = FavoritePlaces(
+    country="America",
+    country_pop=40000000,
+    city="New York"
+)
 
 # creating records on our Progammer table
 ada_lovelace = Programmer(
@@ -97,10 +131,19 @@ your_name = Programmer(
 # session.add(tim_berners_lee)
 # session.add(your_name)
 
+# add each instance of our favorite places
+# session.add(leeds)
+# session.add(madrid)
+# session.add(tokyo)
+# session.add(new_york)
 
 # updating a single record
 # programmer = session.query(Programmer).filter_by(id=7).first()
 # programmer.famous_for = "World President"
+
+# updating another single record
+# pop = session.query(FavoritePlaces).filter_by(country_pop=10000000).first()
+# pop.country_pop = 42
 
 # commit our session to the database
 # session.commit()
@@ -144,13 +187,26 @@ your_name = Programmer(
 
 
 # query the database to find all Programmers
-programmers = session.query(Programmer)
-for programmer in programmers:
+# programmers = session.query(Programmer)
+# for programmer in programmers:
+#     print(
+#         programmer.id,
+#         programmer.first_name + " " + programmer.last_name,
+#         programmer.gender,
+#         programmer.nationality,
+#         programmer.famous_for,
+#         sep=" | "
+#     )
+
+# query the database to find all Favorite Places
+fav_places = session.query(FavoritePlaces)
+for place in fav_places:
     print(
-        programmer.id,
-        programmer.first_name + " " + programmer.last_name,
-        programmer.gender,
-        programmer.nationality,
-        programmer.famous_for,
+        place.id,
+        place.country,
+        place.country_pop,
+        place.city,
         sep=" | "
     )
+    # session.delete(place)
+    # session.commit()
